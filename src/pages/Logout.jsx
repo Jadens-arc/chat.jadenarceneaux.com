@@ -1,7 +1,6 @@
-import { Link, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
-import api from '@/api';
 
 function Logout() {
   let { setToken } = useAuth();

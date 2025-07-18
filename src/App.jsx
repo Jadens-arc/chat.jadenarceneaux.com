@@ -7,14 +7,9 @@ import Logout from '@/pages/Logout';
 import Header from '@/components/Header';
 
 function App() {
-  let user = { "id": "1",
-    "username": "jadenarceneaux",
-    "email": "contact@jadenarceneaux.com",
-  };
-  user = null;
   return (
     <div className='content'>
-      <Header user={user}/>
+      <Header/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
