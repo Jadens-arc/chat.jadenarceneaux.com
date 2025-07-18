@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import DarkModeToggle from '@/components/DarkModeToggle';
+import { useAuth } from '@/components/AuthProvider';
 
 
-function Header(user) {
+function Header() {
+  const { isAuthenticated, token, user } = useAuth();
   return (
     <div className="Header">
       <header>
@@ -12,9 +14,13 @@ function Header(user) {
         <nav>
           <Link to="/">Home</Link>
           &nbsp;
-          {user.username ? (
+          {isAuthenticated ? (
             <>
-              <Link to="/messages">Messages</Link>
+              <Link to="/messages">My Messages</Link>
+              &nbsp;
+              <Link to="/new-message">New Message</Link>
+              &nbsp;
+              <Link to="/logout">Log Out</Link>
             </>
           ) : (
             <>

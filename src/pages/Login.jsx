@@ -1,18 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
-import API from '@/API';
+import { useAuth } from "@/components/AuthProvider"; 
+import api from '@/api';
 
 function Login() {
   let [formData, setFormData] = useState({});
-  const handleSubmit = (event) => {
+  let [redirect, setRedirect] = useState(false); // redirect state
+  let { setToken } = useAuth();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    let api = new API();
     try {
-      api.authenticate(formData);
+      let response = await api.post("/login", formData);
+      let { token } = response.data;
+      setToken(token);
+      setRedirect(true);
     } catch (error) {
       console.error("Error during login:", error);
-      
-
     }
   };
 
@@ -22,6 +26,10 @@ function Login() {
       ...prevData,
       [name]: value,
     }));
+  }
+
+  if (redirect) {
+    return <Navigate to="/" replace={true} />;
   }
 
   return (
