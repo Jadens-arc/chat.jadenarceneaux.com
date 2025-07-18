@@ -1,13 +1,12 @@
-import './css/main.css';
+import '@/css/main.css';
 import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Signup from './pages/Signup';
-import Login from './pages/Login';
-import Header from './components/Header';
+import Home from '@/pages/Home';
+import Signup from '@/pages/Signup';
+import Login from '@/pages/Login';
+import Header from '@/components/Header';
 
 function App() {
-  let user = {
-    "id": "1",
+  let user = { "id": "1",
     "username": "jadenarceneaux",
     "email": "contact@jadenarceneaux.com",
   };
