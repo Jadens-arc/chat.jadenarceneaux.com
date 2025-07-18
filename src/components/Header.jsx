@@ -16,7 +16,7 @@ function Header(user) {
             <>
               <Link to="/login">Login</Link>
               &nbsp;
-              <Link href="/signup">Sign Up</Link>
+              <Link to="/signup">Sign Up</Link>
             </>
           )}
           <span id="dark-mode-toggle" onClick={() => window.toggleTheme && window.toggleTheme()}></span>
