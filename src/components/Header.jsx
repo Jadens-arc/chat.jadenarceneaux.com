@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import DarkModeToggle from './DarkModeToggle';
+
 
 function Header(user) {
   return (
@@ -11,7 +13,9 @@ function Header(user) {
           <Link to="/">Home</Link>
           &nbsp;
           {user.username ? (
-            <Link to="/messages">Messages</Link>
+            <>
+              <Link to="/messages">Messages</Link>
+            </>
           ) : (
             <>
               <Link to="/login">Login</Link>
@@ -19,7 +23,8 @@ function Header(user) {
               <Link to="/signup">Sign Up</Link>
             </>
           )}
-          <span id="dark-mode-toggle" onClick={() => window.toggleTheme && window.toggleTheme()}></span>
+          &nbsp;|
+          <DarkModeToggle />
         </nav>
       </header>
     </div>
