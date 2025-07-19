@@ -1,55 +1,16 @@
 import express from 'express';
-import http from 'http';
-import { Server } from 'socket.io';
-import cors from 'cors';
-import { jwtVerify, SignJWT } from 'jose';
-import  bcrypt  from 'bcrypt';
-import { Sequelize, DataTypes } from 'sequelize';
+import bcrypt from 'bcrypt';
+import { SignJWT, jwtVerify } from 'jose';
+import db from '../models/index.js';
 
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+const router = express.Router();
+const { User } = db;
 const secret = new TextEncoder().encode('your-very-secret-key');
-const saltRounds = 10; 
-const sequelize = new Sequelize('postgres://express:1bACnLFEssTdactr@localhost:5432/chatjadenarceneaux') // Example for postgres
+const saltRounds = 10;
 
-try {
-  await sequelize.authenticate();
-  console.log('Connection has been established successfully.');
-} catch (error) {
-  console.error('Unable to connect to the database:', error);
-}
 
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}));
-app.use(express.json()); 
 
-const User = sequelize.define('User', {
-  username: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-}, {
-  timestamps: true,
-  tableName: 'users'
-}); 
-
-app.get('/', (req, res) => {
-  res.send('Welcome to the chat server!');
-});
-
-app.post('/login', async (req, res) => {
+router.post('/login', async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ message: 'Username and password are required' });
@@ -66,7 +27,11 @@ app.post('/login', async (req, res) => {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
-      const token = await new SignJWT(user.toJSON())
+      const token = await new SignJWT({
+        id: user.id,
+        username: user.username,
+        email: user.email
+      })
         .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt()
         .setExpirationTime('1h')
@@ -76,7 +41,7 @@ app.post('/login', async (req, res) => {
     });
 });
 
-app.post('/signup', async (req, res) => {
+router.post('/signup', async (req, res) => {
   const { username, password, email } = req.body;
   if (!username || !password) {
     return res.status(400).json({ message: 'Username and password are required' });
@@ -97,7 +62,7 @@ app.post('/signup', async (req, res) => {
   res.status(200).json({ token });
 });
 
-app.get('/me', async (req, res) => {
+router.get('/me', async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader?.startsWith('Bearer ')) {
@@ -115,14 +80,4 @@ app.get('/me', async (req, res) => {
   }
 });
 
-io.on('connection', (socket) => {
-  console.log('A user connected');
-
-  socket.on('disconnect', () => {
-    console.log('A user disconnected');
-  });
-});
-
-server.listen(5001, () => {
-  console.log('Server is running on http://localhost:5001');
-});
+export default router;

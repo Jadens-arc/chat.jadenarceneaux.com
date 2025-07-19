@@ -25,7 +25,7 @@ const AuthProvider = ({ children }) => {
         const fetchUser = async () => {
             if (!token) return; 
             try {
-                await api.get('/me');
+                await api.get('/auth/me');
             } catch (error) {
                 setToken(null);
                 localStorage.removeItem('token');

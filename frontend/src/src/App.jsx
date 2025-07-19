@@ -5,6 +5,7 @@ import Signup from '@/pages/Signup';
 import Login from '@/pages/Login';
 import Logout from '@/pages/Logout';
 import Header from '@/components/Header';
+import Messages from '@/pages/Messages';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
+        <Route path="/messages" element={<Messages/>} />
       </Routes>
     </div>
   );

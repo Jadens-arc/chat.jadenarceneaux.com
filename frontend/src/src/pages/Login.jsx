@@ -11,7 +11,7 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      let response = await api.post("/login", formData);
+      let response = await api.post("/auth/login", formData);
       let { token } = response.data;
       setToken(token);
       setRedirect(true);

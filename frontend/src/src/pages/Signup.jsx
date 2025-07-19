@@ -11,7 +11,7 @@ function Signup() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      let response = await api.post("/signup", formData);
+      let response = await api.post("/auth/signup", formData);
       let { token } = response.data;
       setToken(token);
       setRedirect(true);
@@ -29,7 +29,7 @@ function Signup() {
   }
 
   if (redirect) {
-    return <Navigate to="/" replace={true} />;
+    return <Navigate to="/login" replace={true} />;
   }
 
   return (

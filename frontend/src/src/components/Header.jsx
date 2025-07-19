@@ -16,9 +16,7 @@ function Header() {
           &nbsp;
           {isAuthenticated ? (
             <>
-              <Link to="/messages">My Messages</Link>
-              &nbsp;
-              <Link to="/new-message">New Message</Link>
+              <Link to="/messages">Messages</Link>
               &nbsp;
               <Link to="/logout">Log Out</Link>
             </>
