@@ -1,17 +1,50 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useState } from "react";
+import { useAuth } from "@/components/AuthProvider"; 
+import api from '@/api';
 
 function Signup() {
+  let [formData, setFormData] = useState({});
+  let [redirect, setRedirect] = useState(false); // redirect state
+  let { setToken } = useAuth();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      let response = await api.post("/signup", formData);
+      let { token } = response.data;
+      setToken(token);
+      setRedirect(true);
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  }
+
+  if (redirect) {
+    return <Navigate to="/" replace={true} />;
+  }
+
   return (
     <>
       <div className="signup-container">
         <h2>Sign Up</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="email">Email Address:</label>
+          <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
           <label htmlFor="username">Username:</label>
-          <input type="text" id="username" name="username" required />
+          <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} required />
           <label htmlFor="password">Password:</label>
-          <input type="password" id="password" name="password" required />
-          <label htmlFor="password">Confirm Password:</label>
-          <input type="confirm-password" id="password" name="password" required />
+          <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
+          <label htmlFor="confirm-password">Confirm Password:</label>
+          <input type="password" id="confirm-password" name="confirm-password" required />
           <div>
             <button type="submit">Sign Up</button>
           </div>
