@@ -18,7 +18,6 @@ const User = sequelize.define('User', {
   },
 }, {
   timestamps: true,
-  tableName: 'users'
 }); 
 
 export default User;

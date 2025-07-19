@@ -1,11 +1,19 @@
 import sequelize from '../config/database.js';
-import User from './user.model.js';
+import User from './User.model.js';
+import UserChannel from './UserChannel.model.js';
+import UserMessage from './UserMessage.model.js';
+import Channel from './Channel.model.js';
+import Message from './Message.model.js';
 
 const db = {
   sequelize,
   User,
+  Channel,
+  UserChannel,
+  UserMessage,
+  Message,
 };
 
-await sequelize.sync({ alter: true }); // only in dev
+await sequelize.sync({ alter: true }); 
 
 export default db;

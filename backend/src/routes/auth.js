@@ -8,8 +8,6 @@ const { User } = db;
 const secret = new TextEncoder().encode('your-very-secret-key');
 const saltRounds = 10;
 
-
-
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
