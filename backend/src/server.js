@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import { Sequelize } from 'sequelize';
 import authRoutes from './routes/auth.js';
+import channelRoutes from './routes/channels.js';
 
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(cors({
 
 app.use(express.json()); 
 app.use('/auth', authRoutes);
+app.use('/channels', channelRoutes);
 
 app.get('/', (req, res) => {
   res.send('Welcome to the chat server!');

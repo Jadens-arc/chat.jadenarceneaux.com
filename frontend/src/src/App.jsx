@@ -8,8 +8,13 @@ import Header from '@/components/Header';
 import Messages from '@/pages/Messages';
 
 function App() {
+  let appStyle = {
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "90vh",
+  };
   return (
-    <div className='content'>
+    <div className='content' style={appStyle}> 
       <Header/>
       <Routes>
         <Route path="/" element={<Home />} />
