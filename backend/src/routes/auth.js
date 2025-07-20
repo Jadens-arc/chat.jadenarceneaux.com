@@ -25,11 +25,7 @@ router.post('/login', async (req, res) => {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
-      const token = await new SignJWT({
-        id: user.id,
-        username: user.username,
-        email: user.email
-      })
+      const token = await new SignJWT(user.getSafeAttributes())
         .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt()
         .setExpirationTime('1h')

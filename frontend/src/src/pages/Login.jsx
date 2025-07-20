@@ -12,8 +12,8 @@ function Login() {
     event.preventDefault();
     try {
       let response = await api.post("/auth/login", formData);
-      let { token } = response.data;
-      setToken(token);
+      let data = response.data;
+      setToken(data.token);
       setRedirect(true);
     } catch (error) {
       console.error("Error during login:", error);
@@ -35,7 +35,7 @@ function Login() {
   return (
     <>
       <div className="login-container">
-        <h2>Login</h2>
+        <h2>Log In</h2>
         <form onSubmit={handleSubmit}>
           <label htmlFor="username">Username:</label>
           <input value={formData.username} onChange={handleChange} type="text" id="username" name="username" required />

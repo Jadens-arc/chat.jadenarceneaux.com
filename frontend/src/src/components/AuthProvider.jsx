@@ -20,15 +20,20 @@ export const useAuth = () => {
 
 const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(() => localStorage.getItem('token'));
+    const [user, setUser] = useState(() => localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null);
 
     useEffect(() => {
         const fetchUser = async () => {
             if (!token) return; 
             try {
-                await api.get('/auth/me');
+                let data = (await api.get('/auth/me')).data;
+                setUser(data.user);
             } catch (error) {
+                console.log('Failed to fetch user:', error);
                 setToken(null);
+                setUser(null);
                 localStorage.removeItem('token');
+                localStorage.removeItem('user');
             }
         };
         fetchUser();
@@ -52,8 +57,13 @@ const AuthProvider = ({ children }) => {
         else localStorage.removeItem('token');
     }, [token]);
 
+    useEffect(() => {
+        if (user) localStorage.setItem('user', JSON.stringify(user));
+        else localStorage.removeItem('user');
+    }, [user]);
+
     return (
-        <AuthContext.Provider value={{ token, setToken, isAuthenticated: !!token }}>
+        <AuthContext.Provider value={{ token, setToken, user, setUser, isAuthenticated: !!token }}>
             {children}
         </AuthContext.Provider>
     );

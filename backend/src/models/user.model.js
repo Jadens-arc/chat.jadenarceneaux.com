@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js'; 
 
 
-const User = sequelize.define('User', {
+let User = sequelize.define('User', {
   username: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -19,5 +19,13 @@ const User = sequelize.define('User', {
 }, {
   timestamps: true,
 }); 
+
+User.prototype.getSafeAttributes = function() {
+  return {
+    id: this.id,
+    username: this.username,
+    email: this.email
+  };
+};
 
 export default User;
