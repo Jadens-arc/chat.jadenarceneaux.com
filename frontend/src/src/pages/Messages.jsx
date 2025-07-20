@@ -14,8 +14,17 @@ function Messages() {
   let [channels, setChannels] = useState({});
   let [currentChannel, setCurrentChannel] = useState({});
 
-  const handleNewMessage = () => {
-    setCurrentChannel({newChannel: true});
+  const handleNewChannel = () => {
+    setCurrentChannel({newChannel: true, createChannel: (channelName, recipients) => {
+      api.post('/channels/create', { channelName, recipients })
+        .then(response => {
+          setChannels(prevChannels => [...prevChannels, response.data.channel]);
+          setCurrentChannel({});
+        })
+        .catch(error => {
+          console.error("Error creating channel:", error);
+        });
+    }});
   }
 
   useEffect(() => {
@@ -36,7 +45,7 @@ function Messages() {
       <h2>Your Channels</h2>
       <div style={messageStyle}>
         <div style={{ width: "20%" }}>
-          <button onClick={handleNewMessage}>New Message</button>
+          <button onClick={handleNewChannel}>New Channel</button>
           <ChannelList channels={channels} setCurrentChannel={setCurrentChannel}/>
         </div>
         <ChannelView currentChannel={currentChannel}/>
