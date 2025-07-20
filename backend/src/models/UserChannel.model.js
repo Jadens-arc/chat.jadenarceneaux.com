@@ -4,7 +4,7 @@ import Channel from './Channel.model.js';
 
 const UserChannel = sequelize.define('UserChannel', { }, { timestamps: false }); 
 
-User.belongsToMany(Channel, { through: UserChannel });
-Channel.belongsToMany(User, { through: UserChannel });
+User.belongsToMany(Channel, { through: UserChannel, as: 'channels' });
+Channel.belongsToMany(User, { through: UserChannel, as: 'users' });
 
 export default UserChannel;

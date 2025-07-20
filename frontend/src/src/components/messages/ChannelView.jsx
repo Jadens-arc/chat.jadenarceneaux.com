@@ -1,53 +1,42 @@
 import { useEffect, useState } from "react";
+import api from '@/api';
 
 function ChannelView({ currentChannel }) {
-  let containerStyle = {
-    width: "80%",
-    padding: "10px",
-    border: "1px solid #ccc",
-  };
-  let [recipients, setRecipients] = useState([]);
-  let [channelName, setChannelName] = useState("");
-
-  const onEnter = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const recipient = e.target.value;
-      if (recipient) {
-        setRecipients((prevRecipients) => [...prevRecipients, recipient]);
-        e.target.value = "";
-      }
+  let [channelDetails, setChannelDetails] = useState({});
+  useEffect(() => {
+    if (currentChannel.id) {
+      console.log("Fetching channel details for ID:", currentChannel.id);
+      api.get(`/channels/${currentChannel.id}`)
+        .then(response => {
+          console.log("Fetched channel details:", response.data);
+          setChannelDetails(response.data.channel);
+        })
+        .catch(error => {
+          console.error("Error fetching channel details:", error);
+        });
     }
-  };
-
-  if (currentChannel.newChannel) {
-    return (
-      <div style={containerStyle}>
-        <label htmlFor="channelName">Channel Name:</label>
-        <input onChange={(e) => { setChannelName(e.target.value) }} required name="channelName" id="channelName" type="text" />
-        <label htmlFor="recipient">Add Recipient:</label>
-        <input onKeyDown={onEnter} name="recipient" id="recipient" type="text" />
-        <label>Recipients:</label>
-        <ul>
-          {recipients.map((recipient, index) => (
-            <li key={index}>{recipient}</li>
-          ))}
-        </ul>
-        <button
-          onClick={() => {
-            console.log("Creating channel with name:", channelName, "and recipients:", recipients);
-            currentChannel.createChannel(channelName, recipients);
-            setRecipients([]);
-          }}
-        >
-          Create Channel
-        </button>
-      </div>
-    );
-  }
+  }, [currentChannel.id]);  
   return (
-    <div>
-    </div>
+    <> 
+      <div>
+        {currentChannel.id ? (
+          <>  
+            <b>Channel: {channelDetails.name}</b>
+            <p>Channel ID: {channelDetails.id}</p>
+            <p>Created At: {new Date(channelDetails.createdAt).toLocaleString()}</p>
+            <p>Updated At: {new Date(channelDetails.updatedAt).toLocaleString()}</p>
+            <p>Members:</p>
+            <ul>
+              {channelDetails.recipients && channelDetails.recipients.map((recipient, index) => (
+                <li key={index}>{recipient}</li>
+              ))} 
+            </ul>
+          </>
+        ) : (
+          <p>No channel selected</p>
+        )}
+      </div>
+    </>
   );
 }
 
