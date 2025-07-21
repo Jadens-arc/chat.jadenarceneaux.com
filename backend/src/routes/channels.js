@@ -81,7 +81,6 @@ router.get('/:id', async (req, res) => {
     const userChannels = await UserChannel.findAll({
       where: { ChannelId: channelId }
     });
-    console.log("UserChannel entries for channel:", userChannels);
     const channel = await Channel.findByPk(channelId, {
       include: [
         {
@@ -94,7 +93,6 @@ router.get('/:id', async (req, res) => {
     if (!channel) {
       return res.status(404).json({ message: 'Channel not found' });
     }
-    console.log("Channel details:", channel);
     const recipients = channel.users.map(user => user.username);
     return res.json({
       channel: {

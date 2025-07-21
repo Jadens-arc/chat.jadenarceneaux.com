@@ -6,6 +6,8 @@ import Login from '@/pages/Login';
 import Logout from '@/pages/Logout';
 import Header from '@/components/Header';
 import Messages from '@/pages/Messages';
+import { socket } from '@/socket';
+import { useEffect, useState } from "react";
 
 function App() {
   let appStyle = {
@@ -13,6 +15,27 @@ function App() {
     flexDirection: "column",
     minHeight: "90vh",
   };
+
+  const [isConnected, setIsConnected] = useState(socket.connected);
+
+  useEffect(() => {
+    function onConnect() {
+      setIsConnected(true);
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+    };
+  }, []);
+
   return (
     <div className='content' style={appStyle}> 
       <Header/>

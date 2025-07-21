@@ -5,11 +5,17 @@ import cors from 'cors';
 import { Sequelize } from 'sequelize';
 import authRoutes from './routes/auth.js';
 import channelRoutes from './routes/channels.js';
+import socketHandlers from './socketHandler.js';
 
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:5173',
+    credentials: true
+  }
+});
 
 app.use(cors({
   origin: 'http://localhost:5173',
@@ -24,13 +30,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to the chat server!');
 });
 
-io.on('connection', (socket) => {
-  console.log('A user connected');
-
-  socket.on('disconnect', () => {
-    console.log('A user disconnected');
-  });
-});
+socketHandlers(io);
 
 server.listen(5001, () => {
   console.log('Server is running on http://localhost:5001');
