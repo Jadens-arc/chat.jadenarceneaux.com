@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from '@/api';
 
-function ChannelViewMessage({ message, index }) {
+function ChannelViewMessage({ channelDetails, message, index }) {
   return (
     <div key={index} className="message">
       <p><strong>{message.sender}</strong>: {message.content}</p>

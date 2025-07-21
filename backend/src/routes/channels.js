@@ -93,7 +93,10 @@ router.get('/:id', async (req, res) => {
     if (!channel) {
       return res.status(404).json({ message: 'Channel not found' });
     }
-    const recipients = channel.users.map(user => user.username);
+    const recipients = channel.users.reduce((acc, user) => {
+      acc[user.id] = user.username;
+      return acc;
+    }, {});
     return res.json({
       channel: {
         id: channel.id,

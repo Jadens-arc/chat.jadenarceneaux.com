@@ -36,6 +36,7 @@ function ChannelView({ currentChannel }) {
       socket.emit('message', {
         content: messageContent,
         channelId: currentChannel.id,
+        token: localStorage.getItem('token'),
       });
     } else {
       console.error("No channel selected to send message.");
@@ -43,24 +44,25 @@ function ChannelView({ currentChannel }) {
   };
 
   useEffect(() => {
-    if (currentChannel) {
+    if (currentChannel.id) {
       console.log("Joining channel:", currentChannel.id);
       socket.emit('joinChannel', { channelId: currentChannel.id });
-      socket.on('newMessage', (message) => {
+      socket.on('message', (message) => {
+        setMessages(prevMessages => [...prevMessages, message]);
         console.log("New message received:", message);
       });
       return () => {
-        socket.off('newMessage');
+        socket.off('message');
       };
     }
-  }, []);
+  }, [currentChannel]);
 
 
   return (
     <div style={containerStyle}>
       {currentChannel.id ? (
         <>  
-          <ChannelViewMessageList messages={messages}/>
+          <ChannelViewMessageList messages={messages} channelDetails={channelDetails}/>
           <ChannelViewMessageInput sendMessage={sendMessage}/>
         </>
       ) : (

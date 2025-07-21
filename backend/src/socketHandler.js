@@ -1,3 +1,9 @@
+import db from './models/index.js';
+const { User, Channel, UserChannel } = db;
+import { SignJWT, jwtVerify } from 'jose';
+const secret = new TextEncoder().encode('your-very-secret-key');
+
+
 export default function socketHandlers(io) {
   io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
@@ -7,13 +13,37 @@ export default function socketHandlers(io) {
       socket.join(channelId);
     });
 
-    socket.on('message', (data) => {
+    socket.on('message', async (data) => {
       console.log('Received message:', data);
-      // Broadcast the message to everyone else
+      let token = data.token;
+      if (!token) {
+        console.error("No token provided in message event");
+        return;
+      }
+      let sender = null;
+      try {
+        const { payload } = await jwtVerify(token, secret);
+        console.log("Token payload:", payload);
+        sender = payload.username;
+      } catch (error) {
+        console.error("Invalid token:", error);
+        return;
+      }
+
+      let date = new Date();
       socket.to(data.channelId).emit('message', {
         content: data.content,
         userId: socket.id,
-        timestamp: new Date(),
+        timestamp: date,
+        sender: sender,
+      });
+
+      socket.emit('message', {
+        content: data.content,
+        userId: socket.id,
+        channelId: data.channelId,
+        timestamp: date, 
+        sender: sender,
       });
     });
 

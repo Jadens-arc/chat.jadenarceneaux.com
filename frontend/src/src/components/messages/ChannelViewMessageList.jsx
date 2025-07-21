@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import api from '@/api';
 import ChannelViewMessage from "./ChannelViewMessage";
 
-function ChannelViewMessageList({ messages }) {
-
+function ChannelViewMessageList({ messages, channelDetails }) {
   let containerStyle = {
     display: "flex",
     flexDirection: "column",
@@ -18,7 +17,7 @@ function ChannelViewMessageList({ messages }) {
   return (
     <div style={containerStyle}>
       {messages.map((message, index) => (
-        <ChannelViewMessage message={message} key={index} />
+        <ChannelViewMessage channelDetails={channelDetails} message={message} key={index} />
       ))}
       <p style={{ display: messages.length === 0 ? 'block' : 'none', ...noMessagesStyle }}>
         No messages in this channel
