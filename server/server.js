@@ -32,6 +32,6 @@ app.get('/', (req, res) => {
 
 socketHandlers(io);
 
-server.listen(5001, () => {
-  console.log('Server is running on http://localhost:5001');
+server.listen(3000, () => {
+  console.log('Server is running on http://localhost:3000');
 });

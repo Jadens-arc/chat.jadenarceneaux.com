@@ -1,0 +1,10 @@
+http://localhost {
+  reverse_proxy /api/* express:3000
+  reverse_proxy /socket.io/* express:3000
+
+  handle_path / {
+    root * /srv
+    try_files {path} /index.html
+    file_server
+  }
+}

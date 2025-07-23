@@ -1,0 +1,53 @@
+services:
+  express:
+    build: ./server
+    container_name: express
+    environment:
+      - DATABASE_URL=postgres://postgres:password@postgres:5432/chatapp
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: chatapp
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  react:
+    build: ./client
+    container_name: react
+    networks:
+      - app-network
+
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    ports:
+      - "8080:80"
+      - "8081:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - react
+      - express
+    networks:
+      - app-network
+
+volumes:
+  postgres-data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  app-network:
+    driver: bridge

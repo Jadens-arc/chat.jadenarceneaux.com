@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "nodemon .",
-    "init-db": "node scripts/init-db.js"
+    "init-db": "node scripts/init-db.js",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
