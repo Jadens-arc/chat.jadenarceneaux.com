@@ -1,6 +1,6 @@
 import db from './models/index.js';
-const { User, Channel, UserChannel } = db;
-import { SignJWT, jwtVerify } from 'jose';
+const { User, Message } = db;
+import { jwtVerify } from 'jose';
 const secret = new TextEncoder().encode('your-very-secret-key');
 
 
@@ -29,6 +29,20 @@ export default function socketHandlers(io) {
         console.error("Invalid token:", error);
         return;
       }
+
+      let owner = await User.findOne({ where: { username: sender } });
+      if (!owner) {
+        console.error("User not found:", sender);
+        return;
+      }
+
+      const newMessage = await Message.create({
+        content: data.content,
+        userId: owner.id,
+        channelId: data.channelId,
+      });
+
+      await newMessage.save();
 
       let date = new Date();
       socket.to(data.channelId).emit('message', {

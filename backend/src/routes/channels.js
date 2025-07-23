@@ -3,7 +3,7 @@ import db from '../models/index.js';
 import { SignJWT, jwtVerify } from 'jose';
 
 const router = express.Router();
-const { User, Channel, UserChannel } = db;
+const { User, Channel, UserChannel, Message } = db;
 const secret = new TextEncoder().encode('your-very-secret-key');
 
 router.get('/list', async (req, res) => {
@@ -84,27 +84,31 @@ router.get('/:id/messages', async (req, res) => {
     const channel = await Channel.findByPk(channelId, {
       include: [
         {
-          model: User,
-          as: 'users',
-          attributes: ['id', 'username']
+          model: Message,
+          as: 'messages',
+          attributes: ['id', 'content', 'createdAt'],
+          include: [
+            {
+              model: User,
+              as: 'user',
+              attributes: ['username']
+            }
+          ]
         }
       ]
     });
+    
     if (!channel) {
       return res.status(404).json({ message: 'Channel not found' });
     }
-    const recipients = channel.users.reduce((acc, user) => {
-      acc[user.id] = user.username;
-      return acc;
-    }, {});
+
     return res.json({
-      channel: {
-        id: channel.id,
-        name: channel.name,
-        createdAt: channel.createdAt,
-        updatedAt: channel.updatedAt,
-        recipients: recipients
-      }
+      messages: channel.messages.map(message => ({
+        id: message.id,
+        content: message.content,
+        timestamp: message.createdAt,
+        sender: message.user.username
+      })),
     });
   } catch (error) {
     console.error("Error fetching channel details:", error);

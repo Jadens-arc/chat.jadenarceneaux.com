@@ -16,6 +16,14 @@ function ChannelView({ currentChannel }) {
         .then(response => {
           console.log("Fetched channel details:", response.data);
           setChannelDetails(response.data.channel);
+          api.get(`/channels/${currentChannel.id}/messages`)
+            .then(response => {
+              console.log("Fetched messages details:", response.data);
+              setMessages(response.data.messages);
+            })
+            .catch(error => {
+              console.error("Error fetching channel details:", error);
+            });
         })
         .catch(error => {
           console.error("Error fetching channel details:", error);
