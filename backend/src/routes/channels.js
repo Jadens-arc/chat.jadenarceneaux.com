@@ -69,6 +69,50 @@ router.post('/create', async (req, res) => {
     }
 });
 
+router.get('/:id/messages', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Missing or invalid Authorization header' });
+  }
+  const token = authHeader.split(' ')[1];
+  const { payload } = await jwtVerify(token, secret);
+  const channelId = req.params.id;
+  try {
+    const userChannels = await UserChannel.findAll({
+      where: { ChannelId: channelId }
+    });
+    const channel = await Channel.findByPk(channelId, {
+      include: [
+        {
+          model: User,
+          as: 'users',
+          attributes: ['id', 'username']
+        }
+      ]
+    });
+    if (!channel) {
+      return res.status(404).json({ message: 'Channel not found' });
+    }
+    const recipients = channel.users.reduce((acc, user) => {
+      acc[user.id] = user.username;
+      return acc;
+    }, {});
+    return res.json({
+      channel: {
+        id: channel.id,
+        name: channel.name,
+        createdAt: channel.createdAt,
+        updatedAt: channel.updatedAt,
+        recipients: recipients
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching channel details:", error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+  
+});
+
 router.get('/:id', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith('Bearer ')) {

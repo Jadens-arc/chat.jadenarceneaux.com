@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import api from '@/api';
 import ChannelViewMessageInput from "./ChannelViewMessageInput";
 import ChannelViewMessageList from "./ChannelViewMessageList";
@@ -7,6 +7,7 @@ import { socket } from '@/socket';
 function ChannelView({ currentChannel }) {
   let [channelDetails, setChannelDetails] = useState({});
   let [messages, setMessages] = useState([]);
+  const messageListRef = useRef(null);
 
   useEffect(() => {
     if (currentChannel.id) {
@@ -38,6 +39,7 @@ function ChannelView({ currentChannel }) {
         channelId: currentChannel.id,
         token: localStorage.getItem('token'),
       });
+      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     } else {
       console.error("No channel selected to send message.");
     }
@@ -57,12 +59,11 @@ function ChannelView({ currentChannel }) {
     }
   }, [currentChannel]);
 
-
   return (
     <div style={containerStyle}>
       {currentChannel.id ? (
         <>  
-          <ChannelViewMessageList messages={messages} channelDetails={channelDetails}/>
+          <ChannelViewMessageList messageListRef={messageListRef} messages={messages} channelDetails={channelDetails}/>
           <ChannelViewMessageInput sendMessage={sendMessage}/>
         </>
       ) : (

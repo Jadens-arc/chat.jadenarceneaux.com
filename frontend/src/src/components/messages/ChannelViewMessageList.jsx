@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import api from '@/api';
 import ChannelViewMessage from "./ChannelViewMessage";
 
-function ChannelViewMessageList({ messages, channelDetails }) {
+function ChannelViewMessageList({ messageListRef, messages, channelDetails }) {
   let containerStyle = {
     display: "flex",
     flexDirection: "column",
+    overflowY: "scroll",
   };
 
   let noMessagesStyle = {
@@ -15,7 +16,7 @@ function ChannelViewMessageList({ messages, channelDetails }) {
   };
 
   return (
-    <div style={containerStyle}>
+    <div style={containerStyle} ref={messageListRef}>
       {messages.map((message, index) => (
         <ChannelViewMessage channelDetails={channelDetails} message={message} key={index} />
       ))}

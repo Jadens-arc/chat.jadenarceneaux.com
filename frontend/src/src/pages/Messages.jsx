@@ -5,13 +5,6 @@ import { use, useEffect, useState } from "react";
 import api from '@/api';
 
 function Messages() {
-  let messageStyle = {
-    display: "flex",
-    flexDirection: "row",
-    flex: "1 auto",
-  }
-
-
   let [channels, setChannels] = useState([]);
   let [currentChannel, setCurrentChannel] = useState({});
 
@@ -43,19 +36,36 @@ function Messages() {
   }, []);
 
   let containerStyle = {
+    display: "flex",
+    flexDirection: "column",
+    height: "85vh",
+    overflowY: "hidden",
+  };
+
+  let messageStyle = {
+    display: "flex",
+    flexDirection: "row",
+    flex: "1 auto",
+    flex: 1,                 // fill remaining vertical space in parent
+    overflowY: "auto",       // make only this scrollable
+  }
+
+  let channelContainerStyle = {
     width: "80%",
     padding: "10px",
     border: "1px solid #ccc",
   };
+
+
   return (
-    <>
+    <div style={containerStyle}>
       <h2>Your Message Channels</h2>
       <div style={messageStyle}>
         <div style={{ width: "20%", marginRight: "40px" }}>
           <button onClick={handleNewChannel}>New Channel</button>
           <ChannelList channels={channels} setCurrentChannel={setCurrentChannel}/>
         </div>
-        <div style={containerStyle}>
+        <div style={channelContainerStyle}>
           {currentChannel.newChannel ? (
             <ChannelNew currentChannel={currentChannel} />
           ) : (
@@ -63,7 +73,7 @@ function Messages() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
