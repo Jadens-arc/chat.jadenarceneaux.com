@@ -12,21 +12,21 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost',
     credentials: true
   }
 });
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'http://localhost',
   credentials: true
 }));
 
 app.use(express.json()); 
-app.use('/auth', authRoutes);
-app.use('/channels', channelRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/channels', channelRoutes);
 
-app.get('/', (req, res) => {
+app.get('/api/', (req, res) => {
   res.send('Welcome to the chat server!');
 });
 
