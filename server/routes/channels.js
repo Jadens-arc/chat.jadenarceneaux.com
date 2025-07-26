@@ -1,11 +1,9 @@
 import express from 'express';
 import db from '../models/index.js';
-import { SignJWT, jwtVerify } from 'jose';
 import { userFromRequest } from '../authHelper.js';
 
 const router = express.Router();
 const { User, Channel, UserChannel, Message } = db;
-const secret = new TextEncoder().encode('your-very-secret-key');
 
 router.get('/list', async (req, res) => {
   let user = await userFromRequest(req);
