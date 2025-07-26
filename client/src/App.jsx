@@ -5,7 +5,7 @@ import Signup from '@/pages/Signup';
 import Login from '@/pages/Login';
 import Logout from '@/pages/Logout';
 import Header from '@/components/Header';
-import Messages from '@/pages/Messages';
+import Channels from '@/pages/Channels';
 import { socket } from '@/socket';
 import { useEffect, useState } from "react";
 
@@ -44,7 +44,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
-        <Route path="/messages" element={<Messages/>} />
+        <Route path="/messages" element={<Channels />} />
       </Routes>
     </div>
   );
