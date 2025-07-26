@@ -4,7 +4,7 @@ import ChannelList from "@/components/messages/ChannelList";
 import { use, useEffect, useState } from "react";
 import api from '@/api';
 
-function Messages() {
+function Channels() {
   let [channels, setChannels] = useState([]);
   let [currentChannel, setCurrentChannel] = useState({});
 
@@ -77,4 +77,4 @@ function Messages() {
   );
 }
 
-export default Messages;
+export default Channels;
