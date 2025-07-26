@@ -1,7 +1,8 @@
 localhost {
 	root * /srv
-	file_server
-
 	reverse_proxy /api/* express:3000
 	reverse_proxy /socket.io/* express:3000
+
+	try_files {path} /index.html
+	file_server
 }
