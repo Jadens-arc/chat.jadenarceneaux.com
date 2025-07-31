@@ -1,9 +1,9 @@
 localhost {
-	handle_path /api {
+	handle /socket.io* {
 		reverse_proxy express:3000
 	}
 
-	handle_path /api/* {
+	handle /api/* {
 		reverse_proxy express:3000
 	}
 
