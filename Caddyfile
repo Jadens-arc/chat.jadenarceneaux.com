@@ -3,7 +3,7 @@ localhost {
 		reverse_proxy express:3000
 	}
 
-	handle /api/* {
+	handle /api* {
 		reverse_proxy express:3000
 	}
 
