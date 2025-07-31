@@ -35,12 +35,16 @@ services:
           start_period: 10s
 
   react:
-    build: ./client
+    image: node:latest
     container_name: react
     volumes:
-      - react_dist:/app/dist
+      - ./client:/app
+      - react_dist:/app/dist 
     networks:
       - app-network
+    working_dir: /app/client 
+    command: /bin/sh -c "npm install && npm run build"
+
 
   caddy:
     image: caddy:latest

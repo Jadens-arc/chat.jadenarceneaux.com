@@ -1,8 +1,17 @@
 localhost {
-	root * /srv
-	reverse_proxy /api/* express:3000
-	reverse_proxy /socket.io/* express:3000
+	handle_path /api {
+		reverse_proxy express:3000
+	}
 
-	try_files {path} /index.html
-	file_server
+	handle_path /api/* {
+		reverse_proxy express:3000
+	}
+
+	# Then, handle everything else with static file serving
+	handle {
+		root * /srv
+		encode gzip
+		try_files {path} {path}/ /index.html
+		file_server
+	}
 }

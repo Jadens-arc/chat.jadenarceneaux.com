@@ -23,10 +23,11 @@ app.use(cors({
 }));
 
 app.use(express.json()); 
-app.use('/api/auth', authRoutes);
-app.use('/api/channels', channelRoutes);
 
-app.get('/api/', (req, res) => {
+app.use('/auth', authRoutes);
+app.use('/channels', channelRoutes);
+
+app.get('/', (req, res) => {
   res.send('Welcome to the chat server!');
 });
 
