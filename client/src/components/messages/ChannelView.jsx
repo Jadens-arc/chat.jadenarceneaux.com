@@ -3,6 +3,28 @@ import api from '@/api';
 import ChannelViewMessageInput from "./ChannelViewMessageInput";
 import ChannelViewMessageList from "./ChannelViewMessageList";
 import { socket } from '@/socket';
+const subtle = window.crypto.subtle;
+const encoder = new TextEncoder();
+
+async function encryptMessage(message) {
+  return new Promise((resolve, reject) => {
+    window.crypto.subtle.generateKey(
+      { name: "AES-GCM", length: 256 },
+      true,
+      ["encrypt", "decrypt"]
+    ).then(key => {
+      const iv = window.crypto.getRandomValues(new Uint8Array(12));
+      window.crypto.subtle.encrypt(
+        { name: "AES-GCM", iv },
+        key,
+        encoder.encode(message)
+      ).then(ciphertext => {
+        const buffer = new Uint8Array(ciphertext);
+        resolve(btoa(String.fromCharCode(...buffer)));
+      });
+    });
+  });
+}
 
 function ChannelView({ currentChannel }) {
   let [channelDetails, setChannelDetails] = useState({});
@@ -42,12 +64,15 @@ function ChannelView({ currentChannel }) {
     if (currentChannel.id) {
       console.log("Sending message to channel:", currentChannel.id);
       console.log("Message content:", messageContent);
-      socket.emit('message', {
-        content: messageContent,
-        channelId: currentChannel.id,
-        token: localStorage.getItem('token'),
+      encryptMessage(messageContent).then(encryptedMessage => {
+        console.log("Encrypted message: ", encryptedMessage);
+        socket.emit('message', {
+          content: encryptedMessage,
+          channelId: currentChannel.id,
+          token: localStorage.getItem('token'),
+        });
+        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
       });
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     } else {
       console.error("No channel selected to send message.");
     }
