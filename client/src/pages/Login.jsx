@@ -19,7 +19,7 @@ function Login() {
         setRedirect(true);
       })
       .catch(error => {
-        addAlert("danger", "Login failed: " + error.response.data.message, 3000);
+        addAlert("danger", "Login failed: " + error.response.data.message, 5000);
       })
   };
 

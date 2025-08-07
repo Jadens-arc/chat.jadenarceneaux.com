@@ -404,7 +404,19 @@ button:hover {
   color: white;
 }
 
-.alert {
+.alert-danger {
+  background-color: red;
+  color: white;
+  padding: 0px 10px
+}
+
+.alert-success {
+  background-color: var(--darkMaincolor);
+  color: #202124;
+  padding: 0px 10px
+}
+
+.alert-danger {
   background-color: red;
   color: white;
   padding: 0px 10px
