@@ -10,10 +10,8 @@ function Alert({ id, type, content, duration, onClose }) {
     return () => clearTimeout(timer);
   }, []);
 
-  let className = "alert-" + type;
-
   return (
-    <div class={className}>
+    <div class={"alert-" + type}>
       {content}
     </div>
   );
