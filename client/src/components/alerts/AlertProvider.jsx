@@ -21,7 +21,7 @@ export const useAlert = () => {
 export const AlertProvider = ({ children }) => {
     const [alerts, setAlerts] = useState([]);
 
-    const addAlert = (type, content, duration) => {
+    const addAlert = (type, content, duration=5000) => {
     setAlerts([...alerts, {"id": Date.now(), "type": type, "content": content, "duration": duration}]);
     }
 

@@ -17,9 +17,10 @@ function Login() {
         let data = response.data;
         setToken(data.token);
         setRedirect(true);
+        addAlert("success", "Logged In!");
       })
       .catch(error => {
-        addAlert("danger", "Login failed: " + error.response.data.message, 5000);
+        addAlert("danger", "Login failed: " + error.response.data.message);
       })
   };
 
