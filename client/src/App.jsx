@@ -6,6 +6,7 @@ import Login from '@/pages/Login';
 import Logout from '@/pages/Logout';
 import Header from '@/components/Header';
 import Channels from '@/pages/Channels';
+import { AlertProvider } from '@/components/alerts/AlertProvider'
 import { socket } from '@/socket';
 import { useEffect, useState } from "react";
 
@@ -39,13 +40,15 @@ function App() {
   return (
     <div className='content' style={appStyle}> 
       <Header/>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/messages" element={<Channels />} />
-      </Routes>
+      <AlertProvider>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/messages" element={<Channels />} />
+        </Routes>
+      </AlertProvider>
     </div>
   );
 }

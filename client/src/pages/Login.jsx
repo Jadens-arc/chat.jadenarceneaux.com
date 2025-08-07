@@ -2,22 +2,25 @@ import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "@/components/AuthProvider"; 
 import api from '@/api';
+import { useAlert } from "@/components/alerts/AlertProvider";
 
 function Login() {
   let [formData, setFormData] = useState({});
   let [redirect, setRedirect] = useState(false); // redirect state
   let { setToken } = useAuth();
+  let { addAlert } = useAlert();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      let response = await api.post("/auth/login", formData);
-      let data = response.data;
-      setToken(data.token);
-      setRedirect(true);
-    } catch (error) {
-      console.error("Error during login:", error);
-    }
+    api.post("/auth/login", formData)
+      .then(response => {
+        let data = response.data;
+        setToken(data.token);
+        setRedirect(true);
+      })
+      .catch(error => {
+        addAlert("danger", "Login failed: " + error.response.data.message, 3000);
+      })
   };
 
   const handleChange = (event) => {
