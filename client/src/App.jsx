@@ -1,4 +1,5 @@
 import '@/css/main.css';
+import '@/css/fonts.css';
 import { Routes, Route } from 'react-router-dom';
 import Home from '@/pages/Home';
 import Signup from '@/pages/Signup';
