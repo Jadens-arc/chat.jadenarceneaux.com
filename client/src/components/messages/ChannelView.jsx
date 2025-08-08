@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import api from '@/api';
+import api from '@/lib/api';
 import ChannelViewMessageInput from "./ChannelViewMessageInput";
 import ChannelViewMessageList from "./ChannelViewMessageList";
-import { socket } from '@/socket';
+import { socket } from '@/lib/socket';
 const subtle = window.crypto.subtle;
 const encoder = new TextEncoder();
 

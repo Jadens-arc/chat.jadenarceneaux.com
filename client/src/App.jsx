@@ -8,7 +8,7 @@ import Logout from '@/pages/Logout';
 import Header from '@/components/Header';
 import Channels from '@/pages/Channels';
 import { AlertProvider } from '@/components/alerts/AlertProvider'
-import { socket } from '@/socket';
+import { socket } from '@/lib/socket';
 import { useEffect, useState } from "react";
 
 function App() {

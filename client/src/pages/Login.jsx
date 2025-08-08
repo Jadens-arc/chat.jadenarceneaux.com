@@ -1,7 +1,7 @@
 import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "@/components/AuthProvider"; 
-import api from '@/api';
+import api from '@/lib/api';
 import { useAlert } from "@/components/alerts/AlertProvider";
 
 function Login() {

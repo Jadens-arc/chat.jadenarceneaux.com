@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 import { use, useEffect, useState } from "react";
 import { useAlert } from "@/components/alerts/AlertProvider";
 import { useAuth } from "@/components/AuthProvider";
-import api from '@/api';
+import api from '@/lib/api';
 
 function Channels() {
   let [channels, setChannels] = useState([]);

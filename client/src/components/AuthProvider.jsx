@@ -6,7 +6,7 @@ import {
     useLayoutEffect,
 } from 'react';
 
-import api from '@/api';
+import api from '@/lib/api';
 
 const AuthContext = createContext();
 

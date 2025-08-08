@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from '@/api';
+import api from '@/lib/api';
 
 function ChannelViewMessage({ channelDetails, message, index }) {
   let messageStyle = {
