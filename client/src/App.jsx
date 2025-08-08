@@ -1,5 +1,5 @@
-import '@/css/main.css';
 import '@/css/fonts.css';
+import '@/css/main.css';
 import { Routes, Route } from 'react-router-dom';
 import Home from '@/pages/Home';
 import Signup from '@/pages/Signup';
@@ -13,9 +13,6 @@ import { useEffect, useState } from "react";
 
 function App() {
   let appStyle = {
-    display: "flex",
-    flexDirection: "column",
-    minHeight: "90vh",
   };
 
   const [isConnected, setIsConnected] = useState(socket.connected);

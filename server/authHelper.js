@@ -8,7 +8,7 @@ async function validateAuth(req) {
   return new Promise((resolve, reject) => {
     const authHeader = req.headers.authorization;
     if (!authHeader?.startsWith('Bearer ')) {
-      return res.status(401).json({ message: 'Missing or invalid Authorization header' });
+      reject({ message: 'Missing or invalid Authorization header' });
     }
 
     const token = authHeader.split(' ')[1];
@@ -28,9 +28,13 @@ async function userFromRequest(req) {
       .then(payload => {
         userFromPayload(payload)
           .then(user => {
+            if (!user) {
+              reject({ message: "User not found" });
+            }
             resolve(user);
           })
-      });
+      })
+      .catch(reject);
   });
 }
 

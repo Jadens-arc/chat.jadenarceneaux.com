@@ -29,10 +29,6 @@ export const AlertProvider = ({ children }) => {
       setAlerts(prev => prev.filter(alert => alert.id !== id));
     };
 
-    useEffect(() => {
-      console.log(alerts);
-    }, [alerts]);
-
     return (
         <AlertContext.Provider value={{ alerts, setAlerts, addAlert }}>
           {alerts.map(alert => (

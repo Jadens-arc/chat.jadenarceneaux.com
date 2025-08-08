@@ -16,7 +16,7 @@ function ChannelNew({ currentChannel }) {
     }
   };
   return (
-    <div>
+    <form style={{"border": "none"}}>
       <label htmlFor="channelName">Channel Name:</label>
       <input onChange={(e) => { setChannelName(e.target.value) }} required name="channelName" id="channelName" type="text" />
       <label htmlFor="recipient">Add Recipient:</label>
@@ -27,16 +27,19 @@ function ChannelNew({ currentChannel }) {
           <li key={index}>{recipient}</li>
         ))}
       </ul>
-      <button
-        onClick={() => {
-          console.log("Creating channel with name:", channelName, "and recipients:", recipients);
-          currentChannel.createChannel(channelName, recipients);
-          setRecipients([]);
-        }}
-      >
-        Create Channel
-      </button>
-    </div>
+      <div>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            console.log("Creating channel with name:", channelName, "and recipients:", recipients);
+            currentChannel.createChannel(channelName, recipients);
+            setRecipients([]);
+          }}
+        >
+          Create Channel
+        </button>
+      </div>
+    </form>
   );
 }
 

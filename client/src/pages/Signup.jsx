@@ -2,22 +2,26 @@ import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "@/components/AuthProvider"; 
 import api from '@/api';
+import { useAlert } from "@/components/alerts/AlertProvider";
 
 function Signup() {
   let [formData, setFormData] = useState({});
   let [redirect, setRedirect] = useState(false); // redirect state
   let { setToken } = useAuth();
+  let { addAlert } = useAlert();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      let response = await api.post("/auth/signup", formData);
-      let { token } = response.data;
-      setToken(token);
-      setRedirect(true);
-    } catch (error) {
-      console.error("Error during login:", error);
-    }
+    api.post("/auth/signup", formData)
+      .then(response => {
+        let { token } = response.data;
+        setToken(token);
+        setRedirect(true);
+        addAlert("success", "Successfully signed up. Now please log in")
+      })
+      .catch(error => {
+        addAlert("danger", "Sign up failed: " + error.response.data.message);
+      })
   };
 
   const handleChange = (event) => {

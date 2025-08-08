@@ -1,35 +1,44 @@
 import ChannelView from "@/components/messages/ChannelView";
 import ChannelNew from "@/components/messages/ChannelNew";
 import ChannelList from "@/components/messages/ChannelList";
+import { Navigate } from "react-router-dom";
 import { use, useEffect, useState } from "react";
+import { useAlert } from "@/components/alerts/AlertProvider";
+import { useAuth } from "@/components/AuthProvider";
 import api from '@/api';
 
 function Channels() {
   let [channels, setChannels] = useState([]);
   let [currentChannel, setCurrentChannel] = useState({});
+  let { addAlert } = useAlert();
+  const { isAuthenticated, user } = useAuth();
 
   const handleNewChannel = () => {
     setCurrentChannel({newChannel: true, createChannel: (channelName, recipients) => {
-      api.post('/channels/create', { channelName, recipients })
+      api.post('/channels', { channelName, recipients })
         .then(response => {
           setChannels(prevChannels => [...prevChannels, response.data.channel]);
           setCurrentChannel({});
+          addAlert("success", "Channel created successfully");
         })
         .catch(error => {
-          console.error("Error creating channel:", error);
+          console.log(error);
+          addAlert("danger", "Error creating channel: " + error.response.data.message);
         });
     }});
   }
 
   useEffect(() => {
     const fetchChannels = async () => {
-      try {
-        const response = await api.get('/channels/list');
-        console.log("Fetched channels:", response.data.channels);
-        setChannels(response.data.channels);
-      } catch (error) {
-        console.error("Error fetching channels:", error);
-      }
+      api.get('/channels')
+        .then(response => {
+          setChannels(response.data.channels);
+          console.log("Fetched channels:", response.data.channels);
+        })
+        .catch(error => {
+          console.log(error);
+          addAlert("danger", "Error fetching channels: " + error.response.data.message)
+        });
     };
 
     fetchChannels();
@@ -56,6 +65,9 @@ function Channels() {
     border: "1px solid #ccc",
   };
 
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace={true} />;
+  }
 
   return (
     <div style={containerStyle}>
