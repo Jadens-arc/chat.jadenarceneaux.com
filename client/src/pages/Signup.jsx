@@ -2,6 +2,7 @@ import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "@/components/AuthProvider"; 
 import api from '@/lib/api';
+import { generateECDHKeyPair, deriveAESKey, encryptPrivateKey } from '@/helpers/crypto'
 import { useAlert } from "@/components/alerts/AlertProvider";
 
 function Signup() {
@@ -12,6 +13,20 @@ function Signup() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const keyPair = await generateECDHKeyPair();
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const aesKey = await deriveAESKey(password, salt);
+    const { encryptedPrivateKey, iv } = await encryptPrivateKey(keyPair.privateKey, aesKey);
+    const publicKey = await crypto.subtle.exportKey("spki", keyPair.publicKey);
+
+    formData = {
+      ...formData,
+      publicKey: btoa(String.fromCharCode(...new Uint8Array(publicKey))),
+      encryptedPrivateKey: btoa(String.fromCharCode(...new Uint8Array(encryptedPrivateKey))),
+      salt: btoa(String.fromCharCode(...salt)),
+      iv: btoa(String.fromCharCode(...iv)),
+    };
+
     api.post("/auth/signup", formData)
       .then(response => {
         let { token } = response.data;

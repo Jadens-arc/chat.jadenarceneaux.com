@@ -36,17 +36,25 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/signup', async (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password, email, publicKey, encryptedPrivateKey, salt, iv } = req.body;
   if (!username || !password) {
     return res.status(400).json({ message: 'Username and password are required' });
   }
 
   let existingUser = await User.findOne({ where: { username } });
   if (existingUser) {
-    return res.status(400).json({ message: 'Username already exists' }); 
+    return res.status(400).json({ message: 'Username already exists' });
   }
   const hashedPassword = await bcrypt.hash(password, saltRounds);
-  const user = await User.create({ username, password: hashedPassword, email }); 
+  const user = await User.create({
+      username,
+      password: hashedPassword,
+      email,
+      publicKey,
+      privateKey: encryptedPrivateKey,
+      salt,
+      iv,
+  });
   const token = await new SignJWT(user.toJSON())
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
